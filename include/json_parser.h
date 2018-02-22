@@ -31,6 +31,7 @@ int json_obj_get_int(jparse_ctx_t *jctx, char *name, int *val);
 int json_obj_get_int64(jparse_ctx_t *jctx, char *name, int64_t *val);
 int json_obj_get_float(jparse_ctx_t *jctx, char *name, float *val);
 int json_obj_get_string(jparse_ctx_t *jctx, char *name, char *val, int size);
+int json_obj_get_strlen(jparse_ctx_t *jctx, char *name, int *strlen);
 
 int json_arr_get_array(jparse_ctx_t *jctx, uint32_t index);
 int json_arr_leave_array(jparse_ctx_t *jctx);
@@ -41,5 +42,6 @@ int json_arr_get_int(jparse_ctx_t *jctx, uint32_t index, int *val);
 int json_arr_get_int64(jparse_ctx_t *jctx, uint32_t index, int64_t *val);
 int json_arr_get_float(jparse_ctx_t *jctx, uint32_t index, float *val);
 int json_arr_get_string(jparse_ctx_t *jctx, uint32_t index, char *val, int size);
+int json_arr_get_strlen(jparse_ctx_t *jctx, uint32_t index, int *strlen);
 
 #endif /* _JSON_PARSER_H_ */
