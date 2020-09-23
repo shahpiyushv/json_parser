@@ -1,9 +1,25 @@
+/*
+ *    Copyright 2020 Piyush Shah <shahpiyushv@gmail.com>
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 #include <stdint.h>
 #include <stdbool.h>
 #include <string.h>
 #include <stdlib.h>
-
-#include <jsmn.h>
+#define JSMN_PARENT_LINKS
+#define JSMN_STRICT
+#include <jsmn/jsmn.h>
 #include <json_parser.h>
 
 static bool token_matches_str(jparse_ctx_t *ctx, json_tok_t *tok, char *str)
@@ -76,7 +92,7 @@ static int json_tok_to_float(jparse_ctx_t *jctx, json_tok_t *tok, float *val)
 
 static int json_tok_to_string(jparse_ctx_t *jctx, json_tok_t *tok, char *val, int size)
 {
-	if ((tok->end - tok->start) >= (size - 1))
+	if ((tok->end - tok->start) > (size - 1))
 		return -OS_FAIL;
 	strncpy(val, jctx->js + tok->start, tok->end - tok->start);
 	val[tok->end - tok->start] = 0;
@@ -204,7 +220,40 @@ int json_obj_get_strlen(jparse_ctx_t *jctx, char *name, int *strlen)
 	json_tok_t *tok = json_obj_get_val_tok(jctx, name, JSMN_STRING);
 	if (!tok)
 		return -OS_FAIL;
-	*strlen = tok->end - tok->start + 1;
+	*strlen = tok->end - tok->start;
+	return OS_SUCCESS;
+}
+
+int json_obj_get_object_str(jparse_ctx_t *jctx, char *name, char *val, int size)
+{
+	json_tok_t *tok = json_obj_get_val_tok(jctx, name, JSMN_OBJECT);
+	if (!tok)
+		return -OS_FAIL;
+	return json_tok_to_string(jctx, tok, val, size);
+}
+
+int json_obj_get_object_strlen(jparse_ctx_t *jctx, char *name, int *strlen)
+{
+	json_tok_t *tok = json_obj_get_val_tok(jctx, name, JSMN_OBJECT);
+	if (!tok)
+		return -OS_FAIL;
+	*strlen = tok->end - tok->start;
+	return OS_SUCCESS;
+}
+int json_obj_get_array_str(jparse_ctx_t *jctx, char *name, char *val, int size)
+{
+	json_tok_t *tok = json_obj_get_val_tok(jctx, name, JSMN_ARRAY);
+	if (!tok)
+		return -OS_FAIL;
+	return json_tok_to_string(jctx, tok, val, size);
+}
+
+int json_obj_get_array_strlen(jparse_ctx_t *jctx, char *name, int *strlen)
+{
+	json_tok_t *tok = json_obj_get_val_tok(jctx, name, JSMN_ARRAY);
+	if (!tok)
+		return -OS_FAIL;
+	*strlen = tok->end - tok->start;
 	return OS_SUCCESS;
 }
 
@@ -312,7 +361,7 @@ int json_arr_get_strlen(jparse_ctx_t *jctx, uint32_t index, int *strlen)
 	json_tok_t *tok = json_arr_get_val_tok(jctx, index, JSMN_STRING);
 	if (!tok)
 		return -OS_FAIL;
-	*strlen = tok->end - tok->start + 1;
+	*strlen = tok->end - tok->start;
 	return OS_SUCCESS;
 }
 
