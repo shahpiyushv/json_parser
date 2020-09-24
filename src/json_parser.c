@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #define JSMN_PARENT_LINKS
 #define JSMN_STRICT
+#define JSMN_STATIC
 #include <jsmn/jsmn.h>
 #include <json_parser.h>
 
