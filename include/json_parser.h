@@ -16,6 +16,7 @@
 #ifndef _JSON_PARSER_H_
 #define _JSON_PARSER_H_
 
+#define JSMN_PARENT_LINKS
 #define JSMN_HEADER
 #include <jsmn/jsmn.h>
 #include <stdint.h>
